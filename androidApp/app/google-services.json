@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "655073980944",
+    "project_id": "sweatify-65ec1",
+    "storage_bucket": "sweatify-65ec1.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:655073980944:android:b208dfae1dceee2abf9095",
+        "android_client_info": {
+          "package_name": "com.kraskibrancini.sweatify"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "655073980944-84sb42108dqjbghje7e7v524a3h9pa4o.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.kraskibrancini.sweatify",
+            "certificate_hash": "9983ed820e43d5ef407c9570aa1b37253fdc9e8e"
+          }
+        },
+        {
+          "client_id": "655073980944-dsf13r9ebul67l097qjecu8v974u75po.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDAhHn3-FEXyQm9E3icMtBe7xIhkt4mWmo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "655073980944-dsf13r9ebul67l097qjecu8v974u75po.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -41,7 +41,6 @@ import com.kraskibrancini.sweatify.ui.features.home.models.HomeScreenState
 import kotlinx.coroutines.flow.MutableStateFlow
 import java.time.LocalDateTime
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel()

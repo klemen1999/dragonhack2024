@@ -15,6 +15,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kraskibrancini.sweatify.ui.features.camera.CameraScreen
 import com.kraskibrancini.sweatify.ui.features.home.HomeScreen
+import com.kraskibrancini.sweatify.ui.features.login.LoginScreen
+import com.kraskibrancini.sweatify.ui.features.login.RandomGenerateIdLogin
 import com.kraskibrancini.sweatify.ui.theme.SweatifyTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -32,7 +34,10 @@ class MainActivity : ComponentActivity() {
                 ) {
                     NavHost(
                         navController = navController,
-                        startDestination = "camera") {
+                        startDestination = "login") {
+                        composable("login") {
+                            RandomGenerateIdLogin(navController = navController)
+                        }
                         composable("home") {
                             HomeScreen()
                         }

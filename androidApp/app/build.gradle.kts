@@ -5,6 +5,7 @@ plugins {
     kotlin("kapt")
     //id("com.google.dagger.hilt.android")
     id("dagger.hilt.android.plugin")
+    id("com.google.gms.google-services")
 }
 
 android {
@@ -54,6 +55,7 @@ android {
 }
 
 dependencies {
+    implementation("com.google.firebase:firebase-auth-ktx:22.3.1")
     val cameraXVersion = "1.3.3"
     val nav_version = "2.7.7"
 
@@ -83,6 +85,14 @@ dependencies {
 
     //Permisison accompanist
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
+
+    //preferences
+    implementation("androidx.datastore:datastore-preferences:1.0.0")
+
+    //Firebase
+    implementation(platform("com.google.firebase:firebase-bom:32.8.1"))
+    implementation("com.google.firebase:firebase-auth")
+    implementation("com.google.android.gms:play-services-auth:21.1.0")
 
     //Testing
     testImplementation("junit:junit:4.13.2")
