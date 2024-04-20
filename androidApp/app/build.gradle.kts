@@ -84,6 +84,10 @@ dependencies {
     //Permisison accompanist
     implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
+    //OnnxRuntime
+    implementation("com.microsoft.onnxruntime:onnxruntime-android:latest.release")
+    implementation("com.microsoft.onnxruntime:onnxruntime-extensions-android:latest.release")
+
     //Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
