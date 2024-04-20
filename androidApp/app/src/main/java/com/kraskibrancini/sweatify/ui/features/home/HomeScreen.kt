@@ -1,5 +1,6 @@
 package com.kraskibrancini.sweatify.ui.features.home
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -9,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -29,11 +31,15 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.kraskibrancini.sweatify.core.formatDateToString
 import com.kraskibrancini.sweatify.models.Challenge
 import com.kraskibrancini.sweatify.ui.features.home.models.HomeData
@@ -43,7 +49,8 @@ import java.time.LocalDateTime
 
 @Composable
 fun HomeScreen(
-    viewModel: HomeViewModel = hiltViewModel()
+    viewModel: HomeViewModel = hiltViewModel(),
+    navController: NavController
 ) {
     LaunchedEffect(Unit) {
         viewModel.getChallenges()
@@ -53,7 +60,10 @@ fun HomeScreen(
     HomeScreenContent(
         modifier = Modifier,
         state = state,
-        onJoinChallengeClick = viewModel::joinChallenge
+        onJoinChallengeClick = viewModel::joinChallenge,
+        goToChallenge = {
+            navController.navigate("challenge/$it")
+        }
     )
 
 }
@@ -64,24 +74,58 @@ fun HomeScreen(
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
     state: State<HomeScreenState>,
-    onJoinChallengeClick: (Int) -> Unit
+    onJoinChallengeClick: (Int) -> Unit,
+    goToChallenge: (Int) -> Unit
 ) {
+    val challengeTab = remember { mutableStateOf(true) }
     Scaffold(
         modifier = Modifier.fillMaxSize(),
         topBar = {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(56.dp)
-                    .padding(horizontal = 16.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                Text(text = "Home")
-                Icon(Icons.Default.AccountCircle,
-                    modifier = Modifier.size(24.dp),
-                    contentDescription = "Account")
+            Column {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(56.dp)
+                        .padding(horizontal = 16.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(text = "Home")
+                    Icon(
+                        Icons.Default.AccountCircle,
+                        modifier = Modifier.size(24.dp),
+                        contentDescription = "Account"
+                    )
+                }
+                Divider(
+                    modifier = Modifier.fillMaxWidth(),
+                    thickness = 1.dp
+                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceEvenly
+                ) {
+                    Text(
+                        text = "Challenges",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable { challengeTab.value = true },
+                        color = if (challengeTab.value) Color.Blue else Color.Black
+                    )
+                    Divider(
+                        thickness = 1.dp, modifier = Modifier
+                            .height(24.dp)
+                            .width(1.dp)
+                    )
+                    Text(text = "My Activity",
+                        modifier = Modifier
+                            .padding(8.dp)
+                            .clickable { challengeTab.value = false },
+                        color = if (!challengeTab.value) Color.Blue else Color.Black
+                        )
+                }
             }
+
         },
         floatingActionButton = {
             FloatingActionButton(onClick = { /*TODO*/ }) {
@@ -117,6 +161,29 @@ fun HomeScreenContent(
 
 @Composable
 fun ChallengeListContent(
+    modifier: Modifier = Modifier,
+    challenges: List<Challenge>,
+    onJoinChallengeClick: (Int) -> Unit
+) {
+    LazyColumn(modifier = modifier) {
+        items(challenges) { challenge ->
+            ChallengeCard(
+                modifier = Modifier.padding(vertical = 8.dp),
+                title = challenge.title,
+                description = challenge.description,
+                participants = challenge.participants,
+                dateStart = challenge.start,
+                dateEnd = challenge.end,
+                onJoinChallengeClick = {
+                    onJoinChallengeClick(challenge.id)
+                }
+            )
+        }
+    }
+}
+
+@Composable
+fun ActivityListContent(
     modifier: Modifier = Modifier,
     challenges: List<Challenge>,
     onJoinChallengeClick: (Int) -> Unit

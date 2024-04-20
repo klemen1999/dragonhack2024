@@ -3,7 +3,7 @@ package com.kraskibrancini.sweatify.ui.features.home.models
 import com.kraskibrancini.sweatify.models.Challenge
 
 data class HomeData(
-    val challenges: List<Challenge>
+    val challenges: List<Challenge>,
 )
 
 
