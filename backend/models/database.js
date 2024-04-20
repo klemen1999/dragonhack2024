@@ -14,41 +14,48 @@ mongoose.connect(databaseURI, {
 });
 
 mongoose.connection.on("connected", () => {
-    console.log(`Mongoose je povezan na ${databaseURI}.`);
+    console.log(`Mongoose is connected to ${databaseURI}.`);
 });
 
-mongoose.connection.on("error", (napaka) => {
-    console.log("Mongoose napaka pri povezavi: ", napaka);
+mongoose.connection.on("error", (error) => {
+    console.log("Mongoose error while connecting: ", error);
 });
 
 mongoose.connection.on("disconnected", () => {
-    console.log("Mongoose ni povezan.");
+    console.log("Mongoose is not connected.");
 });
 
-const pravilnaUstavitev = (sporocilo, povratniKlic) => {
+const pravilnaUstavitev = (message, povratniKlic) => {
     mongoose.connection.close(() => {
-        console.log(`Mongoose je zaprl povezavo preko '${sporocilo}'.`);
+        console.log(`Mongoose closed the connection '${message}'.`);
         povratniKlic();
     });
 };
 
-// Ponovni zagon nodemon
+// Restart nodemon
 process.once("SIGUSR2", () => {
-    pravilnaUstavitev("nodemon ponovni zagon", () => {
+    pravilnaUstavitev("nodemon restart", () => {
         process.kill(process.pid, "SIGUSR2");
     });
 });
 
-// Izhod iz aplikacije
+// Application exited
 process.on("SIGINT", () => {
-    pravilnaUstavitev("izhod iz aplikacije", () => {
+    pravilnaUstavitev("application exited", () => {
         process.exit(0);
     });
 });
 
-// Izhod iz aplikacije na Heroku
+// Application exited on Heroku
 process.on("SIGTERM", () => {
-    pravilnaUstavitev("izhod iz aplikacije na Heroku", () => {
+    pravilnaUstavitev("application exited on Heroku", () => {
         process.exit(0);
     });
 });
+
+
+require("./exercise");
+require("./type");
+require("./challenge");
+require("./user");
+require("./leaderboard");
