@@ -13,6 +13,8 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Add
@@ -77,67 +79,57 @@ fun HomeScreenContent(
     goToChallenge: (Int) -> Unit
 ) {
     val challengeTab = remember { mutableStateOf(true) }
-    Scaffold(
-        modifier = Modifier.fillMaxSize(),
-        topBar = {
-            Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(56.dp)
-                        .padding(horizontal = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(text = "Home")
-                    Icon(
-                        Icons.Default.AccountCircle,
-                        modifier = Modifier.size(24.dp),
-                        contentDescription = "Account"
-                    )
-                }
-                Divider(
-                    modifier = Modifier.fillMaxWidth(),
-                    thickness = 1.dp
-                )
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly
-                ) {
-                    Text(
-                        text = "Challenges",
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .clickable { challengeTab.value = true },
-                        color = if (challengeTab.value) Color.Blue else Color.Black
-                    )
-                    Divider(
-                        thickness = 1.dp, modifier = Modifier
-                            .height(24.dp)
-                            .width(1.dp)
-                    )
-                    Text(text = "My Activity",
-                        modifier = Modifier
-                            .padding(8.dp)
-                            .clickable { challengeTab.value = false },
-                        color = if (!challengeTab.value) Color.Blue else Color.Black
-                    )
-                }
-            }
 
-        },
-        floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
-                Icon(Icons.Default.Add, contentDescription = "Add challenge")
-            }
-        },
-        floatingActionButtonPosition = FabPosition.End
-    ) { padVal ->
+    Column(modifier = modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp)
+                .padding(horizontal = 16.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Text(text = "Home")
+            Icon(
+                Icons.Default.AccountCircle,
+                modifier = Modifier.size(24.dp),
+                contentDescription = "Account"
+            )
+        }
+        Divider(
+            modifier = Modifier.fillMaxWidth(),
+            thickness = 1.dp
+        )
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.SpaceEvenly
+        ) {
+            Text(
+                text = "Challenges",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickable { challengeTab.value = true },
+                color = if (challengeTab.value) Color.Blue else Color.Black
+            )
+            Divider(
+                thickness = 1.dp, modifier = Modifier
+                    .height(24.dp)
+                    .width(1.dp)
+            )
+            Text(
+                text = "My Activity",
+                modifier = Modifier
+                    .padding(8.dp)
+                    .clickable { challengeTab.value = false },
+                color = if (!challengeTab.value) Color.Blue else Color.Black
+            )
+        }
+
         when (state.value) {
             is HomeScreenState.Loading -> {
                 Box(
                     modifier = modifier
-                        .padding(padVal)
+                        .padding(16.dp)
                         .fillMaxSize(),
                     contentAlignment = Alignment.Center
                 ) {
@@ -148,7 +140,7 @@ fun HomeScreenContent(
             is HomeScreenState.Loaded -> {
                 ChallengeListContent(
                     modifier = modifier
-                        .padding(padVal)
+                        .padding(16.dp)
                         .fillMaxSize(),
                     challenges = (state.value as HomeScreenState.Loaded).homeData.challenges,
                     onJoinChallengeClick = onJoinChallengeClick
@@ -156,6 +148,7 @@ fun HomeScreenContent(
             }
         }
     }
+
 }
 
 @Composable
@@ -164,7 +157,7 @@ fun ChallengeListContent(
     challenges: List<Challenge>,
     onJoinChallengeClick: (Int) -> Unit
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         challenges.forEach { challenge ->
             ChallengeCard(
                 modifier = Modifier.padding(vertical = 8.dp),
@@ -174,8 +167,8 @@ fun ChallengeListContent(
                 dateStart = challenge.start,
                 dateEnd = challenge.end,
                 onJoinChallengeClick = {
-                    onJoinChallengeClick(challenge.id)
                     println("Joining challenge")
+                    onJoinChallengeClick(challenge.id)
                 }
             )
         }

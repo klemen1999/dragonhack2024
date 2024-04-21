@@ -13,6 +13,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.mediapipe.examples.poselandmarker.core.PreferencesManager
 import java.util.UUID
@@ -20,12 +21,13 @@ import java.util.UUID
 @Composable
 fun RandomGenerateIdLogin(
     navController: NavController,
+    viewModel: LoginViewModel = hiltViewModel()
 ) {
     val context = LocalContext.current
     val username = remember { mutableStateOf(TextFieldValue("")) }
     val preferencesManager = remember { PreferencesManager(context) }
 
-    if (preferencesManager.getString(PreferencesManager.INSTALL_ID) != null) {
+    if (preferencesManager.getInt(PreferencesManager.INSTALL_ID) > 0) {
         navController.navigate("home")
     } else {
         Column(
@@ -43,9 +45,11 @@ fun RandomGenerateIdLogin(
             )
             Button(onClick = {
                 if (username.value.text.isNotEmpty()) {
-                    val randomString = UUID.randomUUID().toString()
+                    //generate random number
+                    val randomNum = (100..10000000).random()
                     preferencesManager.saveString(PreferencesManager.USERNAME, username.value.text)
-                    preferencesManager.saveString(PreferencesManager.INSTALL_ID, randomString)
+                    preferencesManager.saveInt(PreferencesManager.INSTALL_ID, randomNum)
+                    viewModel.login(randomNum, username.value.text)
                     navController.navigate("home")
                 }
             }) {

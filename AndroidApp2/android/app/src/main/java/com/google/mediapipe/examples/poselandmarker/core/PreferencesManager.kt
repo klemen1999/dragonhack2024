@@ -18,4 +18,12 @@ class PreferencesManager(context : Context) {
     fun getString(key: String): String? {
         return sharedPreferences.getString(key, null)
     }
+
+    fun saveInt(key: String, value: Int) {
+        sharedPreferences.edit().putInt(key, value).apply()
+    }
+
+    fun getInt(key: String): Int {
+        return sharedPreferences.getInt(key, 0)
+    }
 }
