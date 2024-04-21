@@ -17,17 +17,12 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FabPosition
-import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -42,7 +37,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
-import com.google.mediapipe.examples.poselandmarker.api.models.Challenge
+import com.google.mediapipe.examples.poselandmarker.api.dto.ChallengeDto
 import com.google.mediapipe.examples.poselandmarker.compose.ui.features.home.models.HomeData
 import com.google.mediapipe.examples.poselandmarker.compose.ui.features.home.models.HomeScreenState
 import com.google.mediapipe.examples.poselandmarker.core.formatDateToString
@@ -54,19 +49,36 @@ fun HomeScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     navController: NavController
 ) {
+    val state = viewModel.state.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.getChallenges()
     }
-    val state = viewModel.state.collectAsState()
 
-    HomeScreenContent(
-        modifier = Modifier,
-        state = state,
-        onJoinChallengeClick = viewModel::joinChallenge,
-        goToChallenge = {
-            navController.navigate("challenge/$it")
+    when (state.value) {
+        is HomeScreenState.Loading -> {
+            Box(
+                modifier = Modifier
+                    .padding(16.dp)
+                    .fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator()
+            }
         }
-    )
+
+        is HomeScreenState.Loaded -> {
+            HomeScreenContent(
+                modifier = Modifier,
+                challenges = (state.value as HomeScreenState.Loaded).homeData?.challenges
+                    ?: emptyList(),
+                onJoinChallengeClick = viewModel::joinChallenge,
+                goToChallenge = {
+                    navController.navigate("challenge/$it")
+                }
+            )
+        }
+    }
+
 
 }
 
@@ -74,9 +86,9 @@ fun HomeScreen(
 @Composable
 fun HomeScreenContent(
     modifier: Modifier = Modifier,
-    state: State<HomeScreenState>,
-    onJoinChallengeClick: (Int) -> Unit,
-    goToChallenge: (Int) -> Unit
+    challenges: List<ChallengeDto>,
+    onJoinChallengeClick: (String) -> Unit,
+    goToChallenge: (String) -> Unit
 ) {
     val challengeTab = remember { mutableStateOf(true) }
 
@@ -125,28 +137,15 @@ fun HomeScreenContent(
             )
         }
 
-        when (state.value) {
-            is HomeScreenState.Loading -> {
-                Box(
-                    modifier = modifier
-                        .padding(16.dp)
-                        .fillMaxSize(),
-                    contentAlignment = Alignment.Center
-                ) {
-                    CircularProgressIndicator()
-                }
-            }
+        ChallengeListContent(
+            modifier = modifier
+                .padding(16.dp)
+                .fillMaxSize(),
+            challenges = challenges,
+            onJoinChallengeClick = onJoinChallengeClick
+        )
 
-            is HomeScreenState.Loaded -> {
-                ChallengeListContent(
-                    modifier = modifier
-                        .padding(16.dp)
-                        .fillMaxSize(),
-                    challenges = (state.value as HomeScreenState.Loaded).homeData.challenges,
-                    onJoinChallengeClick = onJoinChallengeClick
-                )
-            }
-        }
+
     }
 
 }
@@ -154,21 +153,21 @@ fun HomeScreenContent(
 @Composable
 fun ChallengeListContent(
     modifier: Modifier = Modifier,
-    challenges: List<Challenge>,
-    onJoinChallengeClick: (Int) -> Unit
+    challenges: List<ChallengeDto>,
+    onJoinChallengeClick: (String) -> Unit
 ) {
     Column(modifier = modifier.verticalScroll(rememberScrollState())) {
         challenges.forEach { challenge ->
             ChallengeCard(
                 modifier = Modifier.padding(vertical = 8.dp),
-                title = challenge.title,
-                description = challenge.description,
-                participants = challenge.participants,
-                dateStart = challenge.start,
-                dateEnd = challenge.end,
+                title = challenge.exerciseType ?: "Unknown",
+                description = challenge.description ?: "No description",
+                participants = challenge.participants?.map { it ?: "" } ?: emptyList(),
+                dateStart = challenge.startTime ?: "",
+                dateEnd = challenge.endTime ?: "",
                 onJoinChallengeClick = {
                     println("Joining challenge")
-                    onJoinChallengeClick(challenge.id)
+                    onJoinChallengeClick(challenge._id)
                 }
             )
         }
@@ -178,20 +177,18 @@ fun ChallengeListContent(
 @Composable
 fun ActivityListContent(
     modifier: Modifier = Modifier,
-    challenges: List<Challenge>,
-    onJoinChallengeClick: (Int) -> Unit
+    challenges: List<ChallengeDto>,
 ) {
     LazyColumn(modifier = modifier) {
         items(challenges) { challenge ->
             ChallengeCard(
                 modifier = Modifier.padding(vertical = 8.dp),
-                title = challenge.title,
-                description = challenge.description,
-                participants = challenge.participants,
-                dateStart = challenge.start,
-                dateEnd = challenge.end,
+                title = challenge.exerciseType ?: "Unknown",
+                description = challenge.description ?: "No description",
+                participants = challenge.participants?.map { it ?: "" } ?: emptyList(),
+                dateStart = challenge.startTime ?: "",
+                dateEnd = challenge.endTime ?: "",
                 onJoinChallengeClick = {
-                    onJoinChallengeClick(challenge.id)
                 }
             )
         }
@@ -204,8 +201,8 @@ fun ChallengeCard(
     title: String,
     description: String,
     participants: List<String>,
-    dateStart: LocalDateTime,
-    dateEnd: LocalDateTime,
+    dateStart: String,
+    dateEnd: String,
     onJoinChallengeClick: () -> Unit
 ) {
     Card(modifier = modifier) {
@@ -217,8 +214,8 @@ fun ChallengeCard(
             Text(text = title)
             Text(text = description)
             Text(text = "Participants: ${participants.size}")
-            Text(text = "Start: ${formatDateToString(dateStart)}")
-            Text(text = "End: ${formatDateToString(dateEnd)}")
+            Text(text = "Start: ${dateStart}")
+            Text(text = "End: ${dateEnd}")
             Divider(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -239,35 +236,27 @@ fun ChallengeCard(
 @Preview(showBackground = true, showSystemUi = true)
 @Composable
 fun HomeScreenContentPreview() = MaterialTheme {
-    val stateFlow = MutableStateFlow<HomeScreenState>(
+    val stateFlow =
         HomeScreenState.Loaded(
             HomeData(
                 listOf(
-                    Challenge(
-                        id = 1,
-                        title = "Rokice Challenge",
-                        description = "Naredi 10 sklec vsak dan 7 dni.",
-                        start = LocalDateTime.now(),
-                        end = LocalDateTime.now().plusDays(7),
-                        participants = listOf("Aljosa Koren", "Klemen Skrlj")
-                    ),
-                    Challenge(
-                        id = 2,
-                        title = "Kdo je jači?",
-                        description = "Kdo bo naredil več počepov v 1 minuti?",
-                        start = LocalDateTime.now(),
-                        end = LocalDateTime.now().plusDays(7),
+                    ChallengeDto(
+                        _id = "1",
                         participants = emptyList(),
-                        isJoined = true
-                    )
+                        exerciseType = "Pushups",
+                        exercises = emptyList(),
+                        startTime = "Just now",
+                        endTime = "Just now",
+                        recurrence = 1,
+                        description = "Do as many pushups as you can"
+                    ),
                 )
             )
         )
-    )
-    val state = stateFlow.collectAsState()
+
 
     HomeScreenContent(
-        state = state,
+        challenges = stateFlow.homeData.challenges,
         onJoinChallengeClick = {},
         goToChallenge = {}
     )

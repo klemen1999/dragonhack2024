@@ -1,66 +1,40 @@
 package com.google.mediapipe.examples.poselandmarker.compose.ui.features.home
 
 import androidx.lifecycle.ViewModel
-import com.google.mediapipe.examples.poselandmarker.api.models.Challenge
+import androidx.lifecycle.viewModelScope
+import com.google.mediapipe.examples.poselandmarker.api.FitRepository
+import com.google.mediapipe.examples.poselandmarker.api.dto.ChallengeDto
 import com.google.mediapipe.examples.poselandmarker.compose.ui.features.home.models.HomeData
 import com.google.mediapipe.examples.poselandmarker.compose.ui.features.home.models.HomeScreenState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
 import java.time.LocalDateTime
 import javax.inject.Inject
 
 @HiltViewModel
-class HomeViewModel @Inject constructor() : ViewModel() {
+class HomeViewModel @Inject constructor(
+    private val fitRepository: FitRepository
+) : ViewModel() {
 
     private val _state = MutableStateFlow<HomeScreenState>(HomeScreenState.Loading)
-    val state = _state.asStateFlow()
+    val state: StateFlow<HomeScreenState> = _state
 
-    fun getChallenges() {
+     fun getChallenges() {
         //TODO call API
-        _state.value = HomeScreenState.Loaded(
-            homeData = HomeData(
-                challenges = listOf(
-                    Challenge(
-                        id = 1,
-                        title = "Sklece delamo skupaj!",
-                        description = "Naredi 10 sklec vsak dan cel teden",
-                        start = LocalDateTime.now(),
-                        end = LocalDateTime.now().plusDays(7),
-                        participants = listOf("Aljosa Koren", "Klemen Skrlj"),
-                        isJoined = true
-                    ),
-                    Challenge(
-                        id = 2,
-                        title = "Počepi sprint",
-                        description = "Kolko počepov zmoreš v 1 minuti?",
-                        start = LocalDateTime.now(),
-                        end = LocalDateTime.now().plusDays(7),
-                        participants = listOf("User 1"),
-                        isJoined = false
-                    ),
-                    Challenge(
-                        id = 3,
-                        title = "Sklece sprint",
-                        description = "Kolko sklec zmoreš v 1 minuti?",
-                        start = LocalDateTime.now(),
-                        end = LocalDateTime.now().plusDays(7),
-                        participants = listOf("User 1", "User 2", "User 3")
-                    ),
-                    Challenge(
-                        id = 4,
-                        title = "Sklece sprint 2",
-                        description = "Kolko sklec zmoreš v 1 minuti?",
-                        start = LocalDateTime.now(),
-                        end = LocalDateTime.now().plusDays(7),
-                        participants = listOf("User 1", "User 2", "User 3")
-                    )
+        viewModelScope.launch {
+            val challenges = fitRepository.getChallenges()
+            _state.value = HomeScreenState.Loaded(
+                homeData = HomeData(
+                    challenges = challenges
                 )
             )
-        )
+        }
     }
 
-    fun joinChallenge(challengeId: Int) {
+    fun joinChallenge(challengeId: String) {
         //TODO call API
 
     }

@@ -1,9 +1,9 @@
 package com.google.mediapipe.examples.poselandmarker.compose.ui.features.home.models
 
-import com.google.mediapipe.examples.poselandmarker.api.models.Challenge
+import com.google.mediapipe.examples.poselandmarker.api.dto.ChallengeDto
 
 data class HomeData(
-    val challenges: List<Challenge>,
+    val challenges: List<ChallengeDto>,
 )
 
 
