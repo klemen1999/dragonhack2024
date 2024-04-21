@@ -3,7 +3,8 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
-    id("com.google.dagger.hilt.android")
+    //id("com.google.dagger.hilt.android")
+    id("dagger.hilt.android.plugin")
 }
 
 android {
@@ -53,6 +54,8 @@ android {
 }
 
 dependencies {
+    val cameraXVersion = "1.3.3"
+    val nav_version = "2.7.7"
 
     implementation("androidx.core:core-ktx:1.9.0")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.7.0")
@@ -66,6 +69,20 @@ dependencies {
     //Dagger-Hilt
     implementation("com.google.dagger:hilt-android:2.49")
     kapt("com.google.dagger:hilt-compiler:2.49")
+    kapt("androidx.hilt:hilt-compiler:1.2.0")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+
+    //cameraX
+    implementation ("androidx.camera:camera-core:$cameraXVersion")
+    implementation ("androidx.camera:camera-camera2:$cameraXVersion")
+    implementation ("androidx.camera:camera-view:$cameraXVersion")
+    implementation ("androidx.camera:camera-lifecycle:$cameraXVersion")
+
+    //navigation
+    implementation("androidx.navigation:navigation-compose:$nav_version")
+
+    //Permisison accompanist
+    implementation("com.google.accompanist:accompanist-permissions:0.32.0")
 
     //Testing
     testImplementation("junit:junit:4.13.2")
