@@ -19,8 +19,8 @@
     <color name="mp_color_primary_variant">#12B5CB</color>
     <color name="mp_color_primary_dark">#00676D</color>
     <color name="mp_color_secondary">#17D186</color>
-    <color name="mp_color_secondary_variant">#F9AB00</color>
-    <color name="mp_color_error">#CAB134</color>
+    <color name="mp_color_secondary_variant">#F9D000</color>
+    <color name="mp_color_error">#F9D000</color>
     <color name="toolbar_background">#E0E0E0</color>
     <color name="ic_launcher_background">#FFFFFF</color>
     <color name="bottom_sheet_background">#EEEEEE</color>

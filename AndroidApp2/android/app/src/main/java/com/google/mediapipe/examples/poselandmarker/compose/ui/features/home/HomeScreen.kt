@@ -53,7 +53,9 @@ import com.google.mediapipe.examples.poselandmarker.compose.ui.features.home.mod
 import com.google.mediapipe.examples.poselandmarker.core.PreferencesManager
 import com.google.mediapipe.examples.poselandmarker.core.formatDateToString
 import kotlinx.coroutines.flow.MutableStateFlow
+import java.time.LocalDate
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 @Composable
 fun HomeScreen(
@@ -193,8 +195,8 @@ fun ChallengeListContent(
                 title = challenge.exerciseType ?: "Unknown",
                 description = challenge.description ?: "No description",
                 participants = challenge.participants?.map { it ?: "" } ?: emptyList(),
-                dateStart = challenge.startTime ?: "",
-                dateEnd = challenge.endTime ?: "",
+                dateStart = (challenge.startTime ?: "").substringBefore("T"),
+                dateEnd = (challenge.endTime ?: "").substringBefore("T"),
                 onJoinChallengeClick = {
                     println("Joining challenge")
                     onJoinChallengeClick(challenge._id, userId)

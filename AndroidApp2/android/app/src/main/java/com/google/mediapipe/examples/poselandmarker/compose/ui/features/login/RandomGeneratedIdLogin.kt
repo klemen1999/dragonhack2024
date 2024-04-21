@@ -3,7 +3,9 @@ package com.google.mediapipe.examples.poselandmarker.compose.ui.features.login
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -11,8 +13,13 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.mediapipe.examples.poselandmarker.core.PreferencesManager
@@ -35,6 +42,11 @@ fun RandomGenerateIdLogin(
             verticalArrangement = Arrangement.Center,
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            Text(
+                text = "Sweatify",
+                style = TextStyle(fontSize = 50.sp, fontWeight = FontWeight(900)),
+                modifier = Modifier.padding(50.dp)
+            )
             TextField(
                 value = username.value,
                 onValueChange = {
@@ -52,8 +64,11 @@ fun RandomGenerateIdLogin(
                     viewModel.login(randomNum, username.value.text)
                     navController.navigate("home")
                 }
-            }) {
-                Text(text = "Sign In")
+            }, colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F8B)),
+                modifier = Modifier.padding(10.dp)
+                ) {
+                Text(text = "Sign In", style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight(700))
+                )
             }
         }
     }
