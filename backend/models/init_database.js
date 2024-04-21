@@ -78,6 +78,17 @@ db.once("open", async () => {
       },
     ];
     await Challenge.insertMany(challenges);
+    var challenge1 = await Challenge.findOne({ challengeId: 1 })
+    await User.findOneAndUpdate({ userId: 1 }, 
+    { $push: 
+        { activeChallenges: challenge1, todoChallenges: challenge1 } 
+    });
+    var challenge2 = await Challenge.findOne({ challengeId: 2 });
+    await User.findOneAndUpdate({ userId: 2 }, 
+    { $push: 
+        { activeChallenges: challenge2, todoChallenges: challenge2 } 
+    });
+
 
     var bestscores = [
       {
@@ -122,8 +133,13 @@ db.once("open", async () => {
     });
 
     axios.get("/exercises/2", {}).then((res) => {
-        //console.log(res.data);
+        console.log("Exercises by user", res.data);
     });
+
+    axios.get("/exercises").then((res) => {
+        console.log("All exercises", res.data);
+    });
+
 
   } catch (err) {
     console.error(err);
