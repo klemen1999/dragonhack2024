@@ -26,6 +26,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
+
         <androidx.fragment.app.FragmentContainerView
             android:id="@+id/fragment_container"
             android:name="androidx.navigation.fragment.NavHostFragment"
@@ -38,14 +39,24 @@
             app:navGraph="@navigation/nav_graph"
             tools:context=".MainActivity" />
 
-
         <com.google.android.material.bottomnavigation.BottomNavigationView
             android:id="@+id/navigation"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:itemIconTint="@color/bg_nav_item"
             app:itemTextColor="@color/bg_nav_item"
-            app:menu="@menu/menu_bottom_nav" />
+            app:menu="@menu/menu_bottom_nav" >
+
+            <TextView
+                android:id="@+id/textView"
+                android:layout_width="400dp"
+                android:layout_height="73dp"
+                android:layout_marginEnd="99dp"
+                android:textAlignment="center"
+                android:textSize="32sp"
+                android:textFontWeight="900"
+                android:text="" />
+        </com.google.android.material.bottomnavigation.BottomNavigationView>
 
         <View
             android:id="@+id/view"
@@ -56,11 +67,16 @@
 
         <Button
             android:id="@+id/button_send_data"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="142dp"
+            android:layout_height="65dp"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
-            android:layout_marginBottom="29dp"
-            android:text="Send" />
+            android:layout_marginStart="137dp"
+            android:layout_marginEnd="132dp"
+            android:layout_marginBottom="75dp"
+            android:text="FINISH" />
+
 
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -54,18 +54,22 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
         //set background to fragment_container
         navHostFragment.view?.setBackgroundColor(resources.getColor(R.color.mp_color_secondary))
 
         viewModel.stateFlowOfColors.observe(this, Observer {
-            if (it) {
+            if (!it) {
                 activityMainBinding.navigation.setBackgroundColor(resources.getColor(R.color.mp_color_error))
                 //setcolor of navbar
             } else {
                 activityMainBinding.navigation.setBackgroundColor(resources.getColor(R.color.mp_color_secondary))
             }
+            //find @+id/textView
+            activityMainBinding.textView.text = "${viewModel.counter.toInt()}"
         })
         val navController = navHostFragment.navController
         activityMainBinding.navigation.setupWithNavController(navController)

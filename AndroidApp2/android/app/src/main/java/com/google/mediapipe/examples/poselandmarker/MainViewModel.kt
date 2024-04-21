@@ -93,6 +93,7 @@ class MainViewModel @Inject constructor(
             fitRepository.putExerciseToChallenge(userId, challengeId, "1", counter.toInt())
         }
     }
+
     fun calculateAngleBetweenArms(
         poseLandmarkerResults: PoseLandmarkerResult,
         imageHeight: Int,
@@ -114,14 +115,16 @@ class MainViewModel @Inject constructor(
             //calculate angle between arms
             val dotProduct =
                 vectorFirst.first * vectorSecond.first + vectorFirst.second * vectorSecond.second
-            val sizeFirst = sqrt((vectorFirst.first * vectorFirst.first).toDouble())
-            val sizeSecond = sqrt((vectorSecond.first * vectorSecond.first).toDouble())
+            val sizeFirst =
+                sqrt((vectorFirst.first * vectorFirst.first + vectorFirst.second * vectorFirst.second).toDouble())
+            val sizeSecond =
+                sqrt((vectorSecond.first * vectorSecond.first + vectorSecond.second * vectorSecond.second).toDouble())
             val cos = dotProduct / (sizeFirst * sizeSecond)
             val angle = Math.toDegrees(acos(cos))
 
             println("angle: $angle, counter: $counter")
 
-            if (angle > 140) {
+            if (angle > 120) {
                 //arms are up
                 if (isFirstDetected) {
                     isUp = true
@@ -131,7 +134,7 @@ class MainViewModel @Inject constructor(
                     counter += 0.5f
                     stateFlowOfColors.postValue(true)
                 }
-            } else if (angle < 100) {
+            } else if (angle < 90) {
                 if (isFirstDetected) {
                     isUp = false
                     isFirstDetected = false

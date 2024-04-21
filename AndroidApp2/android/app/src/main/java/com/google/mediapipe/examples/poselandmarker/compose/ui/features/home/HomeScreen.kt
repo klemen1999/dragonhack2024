@@ -2,6 +2,7 @@ package com.google.mediapipe.examples.poselandmarker.compose.ui.features.home
 
 import android.content.Intent
 import android.net.Uri
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -20,6 +21,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Divider
@@ -36,8 +38,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.google.mediapipe.examples.poselandmarker.MainActivity
@@ -111,7 +116,7 @@ fun HomeScreenContent(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
-            Text(text = "Home")
+            Text(text = "SWEATIFY", style = TextStyle(fontSize = 24.sp), color = Color.Black, fontWeight = FontWeight(900))
             Icon(
                 Icons.Default.AccountCircle,
                 modifier = Modifier.size(24.dp),
@@ -128,10 +133,11 @@ fun HomeScreenContent(
         ) {
             Text(
                 text = "Challenges",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight(500)),
                 modifier = Modifier
                     .padding(8.dp)
                     .clickable { challengeTab.value = true },
-                color = if (challengeTab.value) Color.Blue else Color.Black
+                color = if (challengeTab.value) Color(0xFF007F8B) else Color.Black
             )
             Divider(
                 thickness = 1.dp, modifier = Modifier
@@ -139,11 +145,12 @@ fun HomeScreenContent(
                     .width(1.dp)
             )
             Text(
-                text = "My Activity",
+                text = "Activities",
+                style = TextStyle(fontSize = 16.sp, fontWeight = FontWeight(500)),
                 modifier = Modifier
                     .padding(8.dp)
                     .clickable { challengeTab.value = false },
-                color = if (!challengeTab.value) Color.Blue else Color.Black
+                color = if (!challengeTab.value) Color(0xFF007F8B) else Color.Black
             )
         }
         if (challengeTab.value) {
@@ -225,7 +232,8 @@ fun ExerciseCard(
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = "Type: ${exercise.type}")
+            Text(text = "${exercise.type?.uppercase()}", style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight(600)))
+            Text(text = "User: ${exercise.userId}")
             Text(text = "Reps: ${exercise.reps}")
         }
     }
@@ -251,7 +259,7 @@ fun ChallengeCard(
                 .padding(16.dp)
                 .fillMaxWidth()
         ) {
-            Text(text = title)
+            Text(text = title.uppercase(), style = TextStyle(fontSize = 15.sp, fontWeight = FontWeight(600)))
             Text(text = description)
             Text(text = "Participants: ${participants.size}")
             Text(text = "Start: ${dateStart}")
@@ -276,7 +284,8 @@ fun ChallengeCard(
                             context.startActivity(intent)
                         }
                     },
-                    modifier = Modifier.fillMaxWidth(0.8f)
+                    modifier = Modifier.fillMaxWidth(0.8f),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF007F8B))
                 ) {
                     if (joined) {
                         Text("Do It!")
