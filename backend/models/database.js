@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-var databaseURI = "mongodb://localhost/Sweatify";
+var databaseURI = "mongodb+srv://user:user@cluster0.aqdkt6e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0";
 
 if (process.env.NODE_ENV === "main") {
     databaseURI = process.env.MONGODB_CLOUD_URI;
