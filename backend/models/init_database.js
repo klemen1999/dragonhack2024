@@ -83,48 +83,50 @@ db.once("open", async () => {
       {
         userId: users[0],
         type: "squat",
-        score: 50,
+        reps: 50,
       },
       {
         userId: users[0],
         type: "squat",
-        score: 100,
+        reps: 100,
       },
     ];
     await BestScore.insertMany(bestscores);
 
     console.log("Sample data added to database");
+        
+    var apiParameters = {
+        server: "http://localhost:" + (process.env.PORT || 3000),
+    };
+    if (process.env.NODE_ENV === "production") {
+    apiParameters.server = "TODO";
+    }
+    const axios = require("axios").create({
+    baseURL: apiParameters.server,
+    timeout: 5000,
+    });
+
+    axios.get("/user/2", {}).then((res) => {
+        console.log(res.data);
+    });
+
+    axios.post("/exercise", { 
+        userId: 3,
+        type: "pushup",
+        duration: 30,
+        reps: 10
+    }).then((res) => {
+        console.log(res.data);
+    }).catch((err) => {
+        console.error(err);
+    });
+
+    axios.get("/exercises/2", {}).then((res) => {
+        //console.log(res.data);
+    });
+
   } catch (err) {
     console.error(err);
   }
 });
 
-var apiParameters = {
-  server: "http://localhost:" + (process.env.PORT || 3000),
-};
-if (process.env.NODE_ENV === "production") {
-  apiParameters.server = "TODO";
-}
-const axios = require("axios").create({
-  baseURL: apiParameters.server,
-  timeout: 5000,
-});
-
-axios.get("/user/2", {}).then((res) => {
-    console.log(res.data);
-});
-
-axios.post("/exercise", { 
-    userId: 1,
-    type: "pushup",
-    duration: 30,
-    reps: 10
-}).then((res) => {
-    console.log(res.data);
-}).catch((err) => {
-    console.error(err);
-});
-
-/* axios.get("/exercises/1", {}).then((res) => {
-    console.log(res.data);
-}); */
