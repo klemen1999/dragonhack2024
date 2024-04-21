@@ -15,12 +15,17 @@
  */
 package com.google.mediapipe.examples.poselandmarker
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mediapipe.examples.poselandmarker.api.FitRepository
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.util.concurrent.Flow
 import javax.inject.Inject
 import kotlin.math.acos
 import kotlin.math.sqrt
@@ -32,6 +37,8 @@ import kotlin.math.sqrt
 class MainViewModel @Inject constructor(
     private val fitRepository: FitRepository
 ) : ViewModel() {
+
+    val stateFlowOfColors = MutableLiveData<Boolean>(false)
 
     private var _model = PoseLandmarkerHelper.MODEL_POSE_LANDMARKER_FULL
     private var _delegate: Int = PoseLandmarkerHelper.DELEGATE_CPU
@@ -122,6 +129,7 @@ class MainViewModel @Inject constructor(
                 } else if (!isUp) {
                     isUp = true
                     counter += 0.5f
+                    stateFlowOfColors.postValue(true)
                 }
             } else if (angle < 100) {
                 if (isFirstDetected) {
@@ -130,6 +138,8 @@ class MainViewModel @Inject constructor(
                 } else if (isUp) {
                     isUp = false
                     counter += 0.5f
+                    //play beep sound
+                    stateFlowOfColors.postValue(false)
                 }
             }
         }
