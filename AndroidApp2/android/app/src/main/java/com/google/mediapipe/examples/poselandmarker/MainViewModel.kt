@@ -15,12 +15,17 @@
  */
 package com.google.mediapipe.examples.poselandmarker
 
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.google.mediapipe.examples.poselandmarker.api.FitRepository
 import com.google.mediapipe.tasks.vision.poselandmarker.PoseLandmarkerResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.launch
+import java.util.concurrent.Flow
 import javax.inject.Inject
 import kotlin.math.acos
 import kotlin.math.sqrt
@@ -32,6 +37,8 @@ import kotlin.math.sqrt
 class MainViewModel @Inject constructor(
     private val fitRepository: FitRepository
 ) : ViewModel() {
+
+    val stateFlowOfColors = MutableLiveData<Boolean>(false)
 
     private var _model = PoseLandmarkerHelper.MODEL_POSE_LANDMARKER_FULL
     private var _delegate: Int = PoseLandmarkerHelper.DELEGATE_CPU
@@ -86,6 +93,7 @@ class MainViewModel @Inject constructor(
             fitRepository.putExerciseToChallenge(userId, challengeId, "1", counter.toInt())
         }
     }
+
     fun calculateAngleBetweenArms(
         poseLandmarkerResults: PoseLandmarkerResult,
         imageHeight: Int,
@@ -107,14 +115,16 @@ class MainViewModel @Inject constructor(
             //calculate angle between arms
             val dotProduct =
                 vectorFirst.first * vectorSecond.first + vectorFirst.second * vectorSecond.second
-            val sizeFirst = sqrt((vectorFirst.first * vectorFirst.first).toDouble())
-            val sizeSecond = sqrt((vectorSecond.first * vectorSecond.first).toDouble())
+            val sizeFirst =
+                sqrt((vectorFirst.first * vectorFirst.first + vectorFirst.second * vectorFirst.second).toDouble())
+            val sizeSecond =
+                sqrt((vectorSecond.first * vectorSecond.first + vectorSecond.second * vectorSecond.second).toDouble())
             val cos = dotProduct / (sizeFirst * sizeSecond)
             val angle = Math.toDegrees(acos(cos))
 
             println("angle: $angle, counter: $counter")
 
-            if (angle > 140) {
+            if (angle > 120) {
                 //arms are up
                 if (isFirstDetected) {
                     isUp = true
@@ -122,14 +132,17 @@ class MainViewModel @Inject constructor(
                 } else if (!isUp) {
                     isUp = true
                     counter += 0.5f
+                    stateFlowOfColors.postValue(true)
                 }
-            } else if (angle < 100) {
+            } else if (angle < 90) {
                 if (isFirstDetected) {
                     isUp = false
                     isFirstDetected = false
                 } else if (isUp) {
                     isUp = false
                     counter += 0.5f
+                    //play beep sound
+                    stateFlowOfColors.postValue(false)
                 }
             }
         }

@@ -20,6 +20,7 @@ import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
 import com.google.mediapipe.examples.poselandmarker.compose.ComposeMainActivity
@@ -30,6 +31,8 @@ import dagger.hilt.android.AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
     private val viewModel : MainViewModel by viewModels()
+
+    //register listeer for stateFlowOfColors in viewmodel
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +54,23 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
+
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment
+        //set background to fragment_container
+        navHostFragment.view?.setBackgroundColor(resources.getColor(R.color.mp_color_secondary))
+
+        viewModel.stateFlowOfColors.observe(this, Observer {
+            if (!it) {
+                activityMainBinding.navigation.setBackgroundColor(resources.getColor(R.color.mp_color_error))
+                //setcolor of navbar
+            } else {
+                activityMainBinding.navigation.setBackgroundColor(resources.getColor(R.color.mp_color_secondary))
+            }
+            //find @+id/textView
+            activityMainBinding.textView.text = "${viewModel.counter.toInt()}"
+        })
         val navController = navHostFragment.navController
         activityMainBinding.navigation.setupWithNavController(navController)
         activityMainBinding.navigation.setOnNavigationItemReselectedListener {
