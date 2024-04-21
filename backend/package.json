@@ -5,7 +5,7 @@
   "scripts": {
     "start": "nodemon ./bin/www"
   },
-  "author": "Team KraškiBrancini",
+  "author": "Team KraskiBrancini",
   "license": "ISC",
   "dependencies": {
     "axios": "^1.6.8",

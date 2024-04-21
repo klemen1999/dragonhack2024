@@ -10,7 +10,7 @@ var router = express.Router();
 var init_database = require("../models/init_database");
 
 router.get("/", (req, res) => {
-    // console.log("Hello world");
+    console.log("Hello world");
 });
 
 router.post("/user", async (req, res) => {
@@ -46,8 +46,9 @@ router.get("/user/:id", async (req, res) => {
 router.post("/exercise", async (req, res) => {
     try {
         var exerciseData = req.body;
-        var userId = exerciseData.userId;
-        var user = await User.findOne({ userId });
+        var uId = exerciseData.userId;
+        console.log("User ID:", uId);
+        var user = await User.findOne({ userId: uId });
         if (!user) {
             return res.status(404).send("User not found");
         }else{
@@ -75,7 +76,13 @@ router.post("/exercise", async (req, res) => {
             );
             // console.log("Bestscore updated:", bestscore);
         }
-        res.status(200).send("Exercise created successfully");
+        //res.status(200).send("Exercise created successfully");
+        console.log("Exercise created:", exercise);
+        
+    
+        res.status(200).json({
+            "exerciseId": exercise._id
+        });
     } catch (err) {
         console.error(err);
         res.status(500).send("Error creating exercise");
@@ -83,16 +90,18 @@ router.post("/exercise", async (req, res) => {
 });
 
 router.get("/exercises/:userId", async (req, res) => {
+    console.log("Getting exercises for user");
     try {
-        var userId = req.params.userId;
-        // console.log("User ID:", userId);
-        var user = await User.findOne({ userId });
-        // console.log("User data:", user);
+        var uId = req.params.userId;
+        console.log("User ID:", uId);
+        var user = await User.findOne({ userId: uId });
+        console.log("User data:", user);
         if (!user) {
             return res.status(404).send("User not found");
         }
-        var exercise = await Exercise.find({ userId: user });
-        // console.log("Exercise data:", exercise);
+        var exercise = await Exercise.find({ userId: user._id });
+        
+        console.log("Exercise data:", exercise);
         res.status(200).json(exercise);
     } catch (err) {
         console.error(err);

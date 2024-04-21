@@ -22,10 +22,10 @@ var users = [
 
 db.once("open", async () => {
   try {
-    await User.deleteMany({});
-    await Challenge.deleteMany({});
-    await Exercise.deleteMany({});
-    await BestScore.deleteMany({});
+    // await User.deleteMany({});
+    // await Challenge.deleteMany({});
+    // await Exercise.deleteMany({});
+    // await BestScore.deleteMany({});
     await User.insertMany(users);
     users = await User.find({});
 
