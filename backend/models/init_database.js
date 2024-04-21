@@ -107,7 +107,7 @@ db.once("open", async () => {
     console.log("Sample data added to database");
         
     var apiParameters = {
-        server: "user:user@cluster0.aqdkt6e.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0",
+        server: "https://dragonhack2024.onrender.com"
     };
     /* if (process.env.NODE_ENV === "production") {
     apiParameters.server = "TODO";
