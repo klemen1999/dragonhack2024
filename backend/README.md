@@ -1,1 +1,6 @@
-# Backeknd Test
+## Setup
+Run
+```
+npm install
+npm start
+```
