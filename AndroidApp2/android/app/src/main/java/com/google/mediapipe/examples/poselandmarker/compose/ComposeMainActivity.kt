@@ -14,7 +14,11 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.mediapipe.examples.poselandmarker.MainActivity
+import com.google.mediapipe.examples.poselandmarker.compose.ui.features.home.HomeScreen
+import com.google.mediapipe.examples.poselandmarker.compose.ui.features.login.RandomGenerateIdLogin
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class ComposeMainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,9 +34,12 @@ class ComposeMainActivity : ComponentActivity() {
                     startDestination = "login"
                 ) {
                     composable("login") {
-
+                        RandomGenerateIdLogin(navController = navController)
                     }
                     composable("home") {
+                        HomeScreen(
+                            navController = navController
+                        )
                     }
                 }
 
