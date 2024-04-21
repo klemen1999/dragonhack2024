@@ -55,7 +55,6 @@ process.on("SIGTERM", () => {
 
 
 require("./exercise");
-require("./type");
 require("./challenge");
 require("./user");
-require("./leaderboard");
+require("./bestscore");

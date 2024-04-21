@@ -1,15 +1,15 @@
 const mongoose = require("mongoose");
 
 const challengeSchema = new mongoose.Schema({
-    challengeId: { type: Number, required: true },
-    exerciseId: { type: Number, required: true },
-    typeId: { type: Number, required: true },
-    startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-    userIds: { type: [Number], required: true },
-    samples: { type: [String], required: true },
+    participants: { type: [mongoose.Schema.Types.ObjectId], ref: 'User', default: [], required: false },
+    exerciseType: { type: String, required: true },
+    exercises: { type: [mongoose.Schema.Types.ObjectId], ref: 'Exercise', default: [], required: false },
+    startTime: { type: Date, default: Date.now(), required: false },
+    endTime: { type: Date, required: true },
+    recurrence: { type: Number, required: true },
+    description: { type: String, required: true },
 });
 
-const Challenge = mongoose.model("Challenge", challengeSchema);
+const Challenge = mongoose.model("Challenge", challengeSchema, "Challenges");
 
 module.exports = Challenge;
