@@ -63,7 +63,7 @@ db.once("open", async () => {
         challengeId: 1,
         name: "Pushup Challenge",
         exerciseType: "pushup",
-        endTime: "2023-10-20T00:00:00Z",
+        endTime: "2024-05-20T00:00:00Z",
         description: "Do 10 pushups every day for 30 days",
         recurrence: 1,
       },
@@ -72,10 +72,19 @@ db.once("open", async () => {
         challengeId: 2,
         name: "Squat Challenge",
         exerciseType: "squat",
-        endTime: "2023-10-20T00:00:00Z",
+        endTime: "2024-10-20T00:00:00Z",
         description: "Do 15 squats every week for 30 days",
         recurrence: 7,
       },
+      {
+        participants: [users[1], users[2]],
+        challengeId: 2,
+        name: "Pushup daily Challenge",
+        exerciseType: "squat",
+        endTime: "2024-06-20T00:00:00Z",
+        description: "Do 20 pushups every day for 30 days",
+        recurrence: 30,
+      }
     ];
     await Challenge.insertMany(challenges);
     var challenge1 = await Challenge.findOne({ challengeId: 1 })
