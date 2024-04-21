@@ -54,5 +54,13 @@
             android:layout_below="@id/navigation"
             android:background="@android:color/darker_gray" />
 
+        <Button
+            android:id="@+id/button_send_data"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="29dp"
+            android:text="Send" />
+
     </RelativeLayout>
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

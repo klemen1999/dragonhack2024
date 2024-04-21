@@ -22,20 +22,27 @@ class HomeViewModel @Inject constructor(
     private val _state = MutableStateFlow<HomeScreenState>(HomeScreenState.Loading)
     val state: StateFlow<HomeScreenState> = _state
 
-     fun getChallenges() {
+     fun getChallenges(userId: Int) {
         //TODO call API
         viewModelScope.launch {
             val challenges = fitRepository.getChallenges()
+            val myChallenges = fitRepository.getChallengesByUserId(userId)
+            val myExercises = fitRepository.getExercise(userId)
             _state.value = HomeScreenState.Loaded(
                 homeData = HomeData(
-                    challenges = challenges
+                    challenges = challenges,
+                    myChallenges = myChallenges,
+                    myExercises = myExercises
                 )
             )
         }
     }
 
-    fun joinChallenge(challengeId: String) {
+    fun joinChallenge(challengeId: String, userId: Int) {
         //TODO call API
-
+        viewModelScope.launch {
+            fitRepository.joinChallenge(userId, challengeId)
+            getChallenges(userId)
+        }
     }
 }

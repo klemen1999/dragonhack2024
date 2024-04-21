@@ -16,21 +16,40 @@
 
 package com.google.mediapipe.examples.poselandmarker
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.ui.setupWithNavController
+import com.google.mediapipe.examples.poselandmarker.compose.ComposeMainActivity
 import com.google.mediapipe.examples.poselandmarker.databinding.ActivityMainBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
     private lateinit var activityMainBinding: ActivityMainBinding
     private val viewModel : MainViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        //getIntent extras
+        val extras = intent.extras
+        val challengeId = extras?.getString("challengeId")
+        val userId = extras?.getInt("userId")
+
+        viewModel.userId = userId ?: 0
+        viewModel.challengeId = challengeId ?: ""
+
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
+
+        //find @+id/button_send_data and setOnClickListener
+        activityMainBinding.buttonSendData.setOnClickListener {
+            viewModel.sendData()
+            val intent = Intent(this, ComposeMainActivity::class.java)
+            startActivity(intent)
+        }
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.fragment_container) as NavHostFragment

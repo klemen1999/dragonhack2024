@@ -383,6 +383,10 @@ class CameraFragment : Fragment(), PoseLandmarkerHelper.LandmarkerListener {
             if (_fragmentCameraBinding != null) {
                 fragmentCameraBinding.bottomSheetLayout.inferenceTimeVal.text =
                     String.format("%d ms", resultBundle.inferenceTime)
+                viewModel.calculateAngleBetweenArms(resultBundle.results.first(),
+                    resultBundle.inputImageHeight,
+                    resultBundle.inputImageWidth,
+                    )
 
                 // Pass necessary information to OverlayView for drawing on the canvas
                 fragmentCameraBinding.overlay.setResults(

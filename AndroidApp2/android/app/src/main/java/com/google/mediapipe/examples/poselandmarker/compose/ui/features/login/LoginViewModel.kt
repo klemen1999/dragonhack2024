@@ -18,6 +18,7 @@ class LoginViewModel @Inject constructor(
             try {
                 fitRepository.createUser(userId, name)
             } catch (e: Exception) {
+                println(e.message)
             }
         }
     }
